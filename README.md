@@ -22,7 +22,7 @@ Open [http://localhost:4000](http://localhost:4000) with your browser to see the
 
 등록되지 않은 기기 경로는 전용 404 화면을 표시하고 `/api/route-misses`를 통해 분석 이벤트를 기록합니다. 원문 경로, 쿼리·프래그먼트를 제거한 유입 경로, 브라우저 언어와 화면 크기 구간만 전송하며 404 화면 표시는 수집 성공 여부에 영향을 받지 않습니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+You can start editing the page by modifying `src/app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
@@ -40,3 +40,11 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Architecture
+
+Application code lives under `src/`: routes and route-local components in `app`, the device domain in `features/devices`, domain-independent UI in `shared`, and backend calls in `server`.
+
+See [the architecture guide](docs/architecture.md) for boundaries, file placement, preserved behavior, and cleanup candidates.
+
+The Rust API defaults to `http://127.0.0.1:4040`; set the server-only `API_BASE_URL` environment variable to override it. Browser requests use the existing `/api/*` Route Handlers. Run `pnpm lint` and `pnpm build` for lint, TypeScript, and production-route verification. There is currently no dedicated test or typecheck script.
