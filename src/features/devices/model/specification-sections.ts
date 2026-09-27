@@ -5,6 +5,7 @@ export const specificationSections = [
     rows: [
       { key: "processor", label: "프로세서 (AP)" },
       { key: "memory", label: "메모리" },
+      { key: "rearCameras", label: "카메라" },
       { key: "displaySize", label: "디스플레이 크기" },
       { key: "dimensions", label: "크기" },
       { key: "weight", label: "무게" },
