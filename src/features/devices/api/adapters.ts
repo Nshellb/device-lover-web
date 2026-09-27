@@ -2,10 +2,10 @@ import type { Device, DeviceSearchItem, SpecKey, SpecValue } from "@/features/de
 import type { ApiCamera, ApiDeviceDetail, ApiDeviceSummary, ApiSpecValue } from "./types";
 
 // Matches device-lover-api's src/catalog.rs SPEC_KEYS exactly — every
-// DeviceDetail response always carries all 27 of these keys.
+// DeviceDetail response always carries all 26 of these keys. Colors are a
+// separate `colors` field on the response, not one of these generic specs.
 const SPEC_KEYS: SpecKey[] = [
   "operatingSystem",
-  "colors",
   "dimensions",
   "weight",
   "storage",
@@ -58,6 +58,7 @@ export function toCamera(camera: ApiCamera): Device {
     variant: camera.series,
     visual: "camera",
     imageUrl: null,
+    colors: [],
     sourceUrl: camera.sourceUrl,
     specs: {
       cameraType: { value: camera.cameraType },
@@ -99,6 +100,7 @@ export function toDevice(detail: ApiDeviceDetail): Device {
     variant: detail.variant ?? "",
     visual: brandVisual(detail.brandSlug),
     imageUrl: detail.imageUrl,
+    colors: detail.colors,
     sourceUrl: detail.sourceUrl,
     specs,
   };

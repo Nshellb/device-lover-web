@@ -6,7 +6,7 @@ import type {
 } from "@/features/devices/model/device";
 
 type DeviceSpecs = Record<SpecKey, SpecValue>;
-type DeviceFixture = Omit<Device, "category" | "specs"> & {
+type DeviceFixture = Omit<Device, "category" | "specs" | "colors"> & {
   category?: DeviceCategory;
   specs?: Partial<DeviceSpecs>;
 };
@@ -18,6 +18,7 @@ function createDevice(
   return {
     ...fixture,
     category: fixture.category ?? "smartphone",
+    colors: [],
     specs: {
       ...baseSpecs,
       ...fixture.specs,
@@ -27,10 +28,6 @@ function createDevice(
 
 const galaxyS24Specs: DeviceSpecs = {
   operatingSystem: { value: "Android 14", detail: "One UI 6.1" },
-  colors: {
-    value: "앰버 옐로우, 코발트 바이올렛, 마블 그레이, 오닉스 블랙",
-    detail: "전용 색상: 사파이어 블루, 샌드스톤 오렌지, 제이드 그린",
-  },
   dimensions: { value: "147.0 × 70.6 × 7.6 mm" },
   weight: { value: "167 g" },
   storage: { value: "256GB, 512GB" },
@@ -64,10 +61,6 @@ const galaxyS24Specs: DeviceSpecs = {
 const galaxyS25Specs: DeviceSpecs = {
   ...galaxyS24Specs,
   operatingSystem: { value: "Android 15", detail: "One UI 7" },
-  colors: {
-    value: "아이스블루, 네이비, 실버 쉐도우, 민트",
-    detail: "전용 색상: 블루블랙, 코랄레드, 핑크골드",
-  },
   dimensions: { value: "146.9 × 70.5 × 7.2 mm" },
   weight: { value: "162 g" },
   processor: { value: "Snapdragon 8 Elite", detail: "for Galaxy" },
@@ -78,10 +71,6 @@ const galaxyS25Specs: DeviceSpecs = {
 const galaxyS26Specs: DeviceSpecs = {
   ...galaxyS25Specs,
   operatingSystem: { value: "Android 16", detail: "One UI 8.5" },
-  colors: {
-    value: "코발트 바이올렛, 스카이 블루, 블랙, 화이트",
-    detail: "전용 색상: 핑크 골드, 실버 쉐도우",
-  },
   dimensions: { value: "149.6 × 71.7 × 7.2 mm" },
   weight: { value: "167 g" },
   displaySize: { value: "159.3 mm", detail: "약 6.3형" },
@@ -93,7 +82,6 @@ const galaxyS26Specs: DeviceSpecs = {
 
 const iphone16Specs: DeviceSpecs = {
   operatingSystem: { value: "iOS 18" },
-  colors: { value: "블랙, 화이트, 핑크, 틸, 울트라마린" },
   dimensions: { value: "147.6 × 71.6 × 7.80 mm" },
   weight: { value: "170 g" },
   storage: { value: "128GB, 256GB, 512GB" },
@@ -124,7 +112,6 @@ const iphone16Specs: DeviceSpecs = {
 const iphone17Specs: DeviceSpecs = {
   ...iphone16Specs,
   operatingSystem: { value: "iOS 26" },
-  colors: { value: "블랙, 화이트, 미스트 블루, 세이지, 라벤더" },
   dimensions: { value: "149.6 × 71.5 × 7.95 mm" },
   weight: { value: "177 g" },
   storage: { value: "256GB, 512GB" },
@@ -146,7 +133,6 @@ const iphone17Specs: DeviceSpecs = {
 const iphone18ProSpecs: DeviceSpecs = {
   ...iphone17Specs,
   operatingSystem: { value: "iOS 27" },
-  colors: { value: "블랙, 실버, 글레이셔, 버건디" },
   dimensions: { value: "150.0 × 71.9 × 8.75 mm" },
   weight: { value: "211 g" },
   storage: { value: "256GB, 512GB, 1TB, 2TB" },
@@ -212,10 +198,6 @@ const deviceCatalog: Device[] = [
     sourceUrl:
       "https://www.samsung.com/sec/smartphones/galaxy-s24-ultra/specs/",
     specs: {
-      colors: {
-        value: "티타늄 그레이, 티타늄 옐로우, 티타늄 바이올렛, 티타늄 블랙",
-        detail: "전용 색상: 티타늄 블루, 티타늄 오렌지, 티타늄 그린",
-      },
       dimensions: { value: "162.3 × 79.0 × 8.6 mm" },
       weight: { value: "232 g" },
       storage: { value: "256GB, 512GB, 1TB" },
@@ -280,10 +262,6 @@ const deviceCatalog: Device[] = [
     sourceUrl:
       "https://www.samsung.com/sec/smartphones/galaxy-s25-ultra/specs/",
     specs: {
-      colors: {
-        value: "티타늄 실버블루, 티타늄 블랙, 티타늄 그레이, 티타늄 화이트실버",
-        detail: "추가 색상: 티타늄 제트블랙, 티타늄 제이드그린, 티타늄 핑크골드",
-      },
       dimensions: { value: "162.8 × 77.6 × 8.2 mm" },
       weight: { value: "218 g" },
       storage: { value: "256GB, 512GB, 1TB" },
@@ -427,9 +405,6 @@ const deviceCatalog: Device[] = [
     imageUrl: "https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/121031-iphone-16-pro.png",
     sourceUrl: "https://support.apple.com/ko-kr/121031",
     specs: {
-      colors: {
-        value: "블랙 티타늄, 화이트 티타늄, 내추럴 티타늄, 데저트 티타늄",
-      },
       dimensions: { value: "149.6 × 71.5 × 8.25 mm" },
       weight: { value: "199 g" },
       storage: { value: "128GB, 256GB, 512GB, 1TB" },
@@ -463,9 +438,6 @@ const deviceCatalog: Device[] = [
     imageUrl: "https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/121032-iphone-16-pro-max.png",
     sourceUrl: "https://support.apple.com/ko-kr/121032",
     specs: {
-      colors: {
-        value: "블랙 티타늄, 화이트 티타늄, 내추럴 티타늄, 데저트 티타늄",
-      },
       dimensions: { value: "163.0 × 77.6 × 8.25 mm" },
       weight: { value: "227 g" },
       storage: { value: "256GB, 512GB, 1TB" },
@@ -510,7 +482,6 @@ const deviceCatalog: Device[] = [
     imageUrl: "https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/iphone-air-hero.png",
     sourceUrl: "https://support.apple.com/ko-kr/125092",
     specs: {
-      colors: { value: "스페이스 블랙, 클라우드 화이트, 라이트 골드, 스카이 블루" },
       speakers: { value: "모노", detail: "내장 스피커 1개" },
       dimensions: { value: "156.2 × 74.7 × 5.64 mm" },
       weight: { value: "165 g" },
@@ -535,7 +506,6 @@ const deviceCatalog: Device[] = [
     imageUrl: "https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/iphone-17-pro-17-pro-max-hero.png",
     sourceUrl: "https://support.apple.com/ko-kr/125090",
     specs: {
-      colors: { value: "실버, 코스믹 오렌지, 딥 블루" },
       dimensions: { value: "150.0 × 71.9 × 8.75 mm" },
       weight: { value: "204 g" },
       storage: { value: "256GB, 512GB, 1TB" },
@@ -562,7 +532,6 @@ const deviceCatalog: Device[] = [
     imageUrl: "https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/iphone-17-pro-17-pro-max-hero.png",
     sourceUrl: "https://support.apple.com/ko-kr/125091",
     specs: {
-      colors: { value: "실버, 코스믹 오렌지, 딥 블루" },
       dimensions: { value: "163.4 × 78.0 × 8.75 mm" },
       weight: { value: "231 g" },
       storage: { value: "256GB, 512GB, 1TB, 2TB" },

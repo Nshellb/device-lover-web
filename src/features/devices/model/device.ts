@@ -6,6 +6,14 @@ export type SpecValue = {
 
 export type DeviceCategory = "smartphone" | "camera";
 
+export type DeviceColor = {
+  id: string;
+  name: string;
+  imageUrl: string | null;
+  colorCode: string | null;
+  exclusive: boolean;
+};
+
 export type DeviceSearchItem = {
   category: DeviceCategory;
   slug: string;
@@ -25,6 +33,7 @@ export type Device = {
   variant: string;
   visual: "galaxy" | "iphone" | "camera";
   imageUrl: string | null;
+  colors: readonly DeviceColor[];
   sourceUrl: string;
   specs: Record<string, SpecValue>;
 };

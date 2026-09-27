@@ -59,6 +59,14 @@ export type ApiDeviceConfiguration = {
   ramStatus: string;
 };
 
+export type ApiDeviceColor = {
+  id: string;
+  name: string;
+  imageUrl: string | null;
+  colorCode: string | null;
+  exclusive: boolean;
+};
+
 export type ApiDeviceSource = {
   id: string;
   url: string;
@@ -70,6 +78,7 @@ export type ApiDeviceSource = {
 export type ApiDeviceDetail = ApiDeviceSummary & {
   variant: string | null;
   configurations: ApiDeviceConfiguration[];
+  colors: ApiDeviceColor[];
   sourceUrl: string;
   sources: ApiDeviceSource[];
   specs: Record<string, ApiSpecValue>;

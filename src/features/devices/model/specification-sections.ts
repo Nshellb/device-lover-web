@@ -13,7 +13,6 @@ export const specificationSections = [
       { key: "waterResistance", label: "방수방진" },
       { key: "speakers", label: "스피커" },
       { key: "operatingSystem", label: "운영체제" },
-      { key: "colors", label: "색상" },
       { key: "releaseDate", label: "출시일" },
     ],
   },
