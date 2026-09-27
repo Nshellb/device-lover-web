@@ -189,7 +189,7 @@ export function DeviceSearch({
                       </p>
                       {device.aliases.length > 0 ? (
                         <p className="mt-0.5 truncate text-xs text-zinc-500 dark:text-zinc-400">
-                          {device.aliases.join(" · ")}
+                          {device.aliases.join(", ")}
                         </p>
                       ) : null}
                     </div>

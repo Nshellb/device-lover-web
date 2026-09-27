@@ -92,7 +92,7 @@ export function DeviceHeader({
         </p>
         {modelNumbers.length > 0 ? (
           <p className="mt-1 text-[11px] leading-4 text-zinc-500 dark:text-zinc-400">
-            모델 번호 {modelNumbers.join(" · ")}
+            모델 번호 {modelNumbers.join(", ")}
           </p>
         ) : null}
         <p className="mt-2 text-xs font-normal text-zinc-500 dark:text-zinc-400">

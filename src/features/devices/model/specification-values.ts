@@ -24,7 +24,7 @@ export function getSpecificationValue(
     return {
       value: `RAM ${value.value}`,
       detail: `내장메모리 ${device.specs.storage.value}${
-        value.detail ? ` · RAM ${value.detail}` : ""
+        value.detail ? `, RAM ${value.detail}` : ""
       }`,
       muted: value.muted,
     };
@@ -57,7 +57,7 @@ export function getSpecificationValue(
         stylus === "미지원" ? null : `펜 지원 (${stylus})`,
       ]
         .filter(Boolean)
-        .join(" · "),
+        .join(", "),
     };
   }
 
