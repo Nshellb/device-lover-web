@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 
@@ -8,6 +9,10 @@ import { recordDeviceSelection } from "../api/client";
 import { buildComparisonPath } from "../model/comparison-path";
 import type { DeviceSearchItem } from "../model/device";
 import { useDeviceSearch } from "../model/use-device-search";
+
+function optionId(device: DeviceSearchItem): string {
+  return `device-search-option-${device.slug}`;
+}
 
 export function DeviceSearch({
   selectedDevices,
@@ -17,6 +22,8 @@ export function DeviceSearch({
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [highlightedIndex, setHighlightedIndex] = useState(0);
+  const resultsListRef = useRef<HTMLUListElement>(null);
   const { searchState, isLoading } = useDeviceSearch(query, isOpen);
   const selectedDeviceSlugs = selectedDevices.map((device) => device.slug);
 
@@ -39,6 +46,20 @@ export function DeviceSearch({
       document.removeEventListener("keydown", closeOnEscape);
     };
   }, [isOpen]);
+
+  // A fresh query (or reopening the modal) invalidates whatever was
+  // highlighted before, so the top result is always what Enter picks by
+  // default — same as a browser's address bar or a search engine's
+  // suggestion list.
+  useEffect(() => {
+    if (!isOpen) return;
+    setHighlightedIndex(0);
+  }, [isOpen, query]);
+
+  useEffect(() => {
+    const item = resultsListRef.current?.children[highlightedIndex];
+    item?.scrollIntoView({ block: "nearest" });
+  }, [highlightedIndex]);
 
   function navigateTo(path: string) {
     setIsOpen(false);
@@ -77,6 +98,29 @@ export function DeviceSearch({
       : query
         ? `검색 결과 ${searchResults.length}개`
         : "인기 기기";
+
+  function handleQueryKeyDown(event: ReactKeyboardEvent<HTMLInputElement>) {
+    if (event.key === "ArrowDown") {
+      if (searchResults.length === 0) return;
+      event.preventDefault();
+      setHighlightedIndex((index) => (index + 1) % searchResults.length);
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      if (searchResults.length === 0) return;
+      event.preventDefault();
+      setHighlightedIndex((index) => (index - 1 + searchResults.length) % searchResults.length);
+      return;
+    }
+
+    if (event.key === "Enter" && !event.nativeEvent.isComposing) {
+      const highlighted = searchResults[highlightedIndex];
+      if (highlighted) {
+        viewDevice(highlighted);
+      }
+    }
+  }
 
   return (
     <>
@@ -133,8 +177,19 @@ export function DeviceSearch({
               <input
                 id="device-search-input"
                 autoFocus
+                autoComplete="off"
+                role="combobox"
+                aria-expanded={isOpen}
+                aria-autocomplete="list"
+                aria-controls="device-search-listbox"
+                aria-activedescendant={
+                  searchResults[highlightedIndex]
+                    ? optionId(searchResults[highlightedIndex])
+                    : undefined
+                }
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
+                onKeyDown={handleQueryKeyDown}
                 placeholder="기기명 또는 모델 번호 검색"
                 className="min-w-0 flex-1 bg-transparent py-1.5 text-base text-zinc-950 outline-none placeholder:text-zinc-400 dark:text-zinc-50"
               />
@@ -167,9 +222,16 @@ export function DeviceSearch({
               <span>{selectedDeviceSlugs.length}/3개 선택</span>
             </div>
 
-            <ul className="min-h-0 flex-1 divide-y divide-zinc-100 overflow-y-auto dark:divide-zinc-800">
-              {searchResults.map((device) => {
+            <ul
+              ref={resultsListRef}
+              id="device-search-listbox"
+              role="listbox"
+              aria-labelledby="device-search-title"
+              className="min-h-0 flex-1 divide-y divide-zinc-100 overflow-y-auto dark:divide-zinc-800"
+            >
+              {searchResults.map((device, index) => {
                 const isSelected = selectedDeviceSlugs.includes(device.slug);
+                const isHighlighted = index === highlightedIndex;
                 const reachedLimit = selectedDeviceSlugs.length >= 3;
                 const changesCategory =
                   selectedDevices.length > 0 &&
@@ -178,7 +240,13 @@ export function DeviceSearch({
                 return (
                   <li
                     key={device.slug}
-                    className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center"
+                    id={optionId(device)}
+                    role="option"
+                    aria-selected={isHighlighted}
+                    onMouseEnter={() => setHighlightedIndex(index)}
+                    className={`flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center ${
+                      isHighlighted ? "bg-zinc-100 dark:bg-zinc-800" : ""
+                    }`}
                   >
                     <div className="min-w-0 flex-1">
                       <p className="text-[11px] font-semibold tracking-[0.1em] text-zinc-500 dark:text-zinc-400">
