@@ -34,7 +34,9 @@ const SPEC_KEYS: SpecKey[] = [
 ];
 
 export function brandVisual(brandSlug: string): Device["visual"] {
-  return brandSlug === "apple" ? "iphone" : "galaxy";
+  if (brandSlug === "apple") return "iphone";
+  if (brandSlug === "samsung") return "galaxy";
+  return "other";
 }
 
 function toSpecValue(spec: ApiSpecValue | undefined): SpecValue {
@@ -52,6 +54,7 @@ export function toCamera(camera: ApiCamera): Device {
     category: "camera",
     slug: camera.slug,
     aliases: [],
+    modelNumbers: [],
     brand: camera.brand,
     name: camera.name,
     releaseDate: `${camera.releaseMonth}-01`,
@@ -94,6 +97,7 @@ export function toDevice(detail: ApiDeviceDetail): Device {
     category: "smartphone",
     slug: detail.slug,
     aliases: detail.aliases,
+    modelNumbers: detail.modelNumbers,
     brand: detail.brand,
     name: detail.name,
     releaseDate: detail.releaseDate,

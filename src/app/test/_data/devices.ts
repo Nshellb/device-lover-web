@@ -6,9 +6,10 @@ import type {
 } from "@/features/devices/model/device";
 
 type DeviceSpecs = Record<SpecKey, SpecValue>;
-type DeviceFixture = Omit<Device, "category" | "specs" | "colors"> & {
+type DeviceFixture = Omit<Device, "category" | "specs" | "colors" | "modelNumbers"> & {
   category?: DeviceCategory;
   specs?: Partial<DeviceSpecs>;
+  modelNumbers?: readonly string[];
 };
 
 function createDevice(
@@ -19,6 +20,7 @@ function createDevice(
     ...fixture,
     category: fixture.category ?? "smartphone",
     colors: [],
+    modelNumbers: fixture.modelNumbers ?? [],
     specs: {
       ...baseSpecs,
       ...fixture.specs,

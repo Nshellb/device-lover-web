@@ -27,11 +27,12 @@ export type Device = {
   category: DeviceCategory;
   slug: string;
   aliases: readonly string[];
+  modelNumbers: readonly string[];
   brand: string;
   name: string;
   releaseDate: string;
   variant: string;
-  visual: "galaxy" | "iphone" | "camera";
+  visual: "galaxy" | "iphone" | "camera" | "other";
   imageUrl: string | null;
   colors: readonly DeviceColor[];
   sourceUrl: string;

@@ -115,20 +115,6 @@ function ColorPicker({
   );
 }
 
-function getModelNumbers(aliases: readonly string[]): string[] {
-  return aliases.flatMap((alias) => {
-    if (/^(?:sm-[a-z0-9]+|a\d{4,})$/i.test(alias)) {
-      return [alias.toUpperCase()];
-    }
-
-    if (/^iphone\d+,\d+$/i.test(alias)) {
-      return [alias.replace(/^iphone/i, "iPhone")];
-    }
-
-    return [];
-  });
-}
-
 export function DeviceHeader({
   device,
   placement,
@@ -150,8 +136,10 @@ export function DeviceHeader({
       ? "text-amber-700 dark:text-amber-400"
       : device.visual === "galaxy"
       ? "text-brand dark:text-blue-400"
-      : "text-rose-700 dark:text-rose-400";
-  const modelNumbers = getModelNumbers(device.aliases);
+      : device.visual === "iphone"
+      ? "text-rose-700 dark:text-rose-400"
+      : "text-zinc-700 dark:text-zinc-300";
+  const modelNumbers = device.modelNumbers.map((value) => value.toUpperCase());
   const [selectedColorId, setSelectedColorId] = useState<string | null>(
     () => device.colors[0]?.id ?? null,
   );
