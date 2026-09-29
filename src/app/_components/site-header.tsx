@@ -34,10 +34,10 @@ export async function SiteHeader() {
             src="/device-lover-logo.svg"
             alt=""
             aria-hidden="true"
-            width={40}
-            height={40}
+            width={657}
+            height={726}
             priority
-            className="size-10"
+            className="h-6 w-auto"
           />
           <span className="text-lg font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
             Device Lover
