@@ -5,16 +5,26 @@ export const specificationSections = [
     rows: [
       { key: "processor", label: "프로세서 (AP)" },
       { key: "memory", label: "메모리" },
-      { key: "rearCameras", label: "카메라" },
-      { key: "displaySize", label: "디스플레이 크기" },
+      { key: "displaySize", label: "디스플레이" },
       { key: "dimensions", label: "크기" },
       { key: "weight", label: "무게" },
+      { key: "rearCameras", label: "카메라" },
       { key: "wiredConnection", label: "단자" },
       { key: "biometrics", label: "생체인식" },
       { key: "waterResistance", label: "방수방진" },
       { key: "speakers", label: "스피커" },
+      { key: "stylus", label: "펜 지원" },
       { key: "operatingSystem", label: "운영체제" },
       { key: "releaseDate", label: "출시일" },
+    ],
+  },
+  {
+    title: "성능",
+    description: "칩, 메모리, 저장 용량",
+    rows: [
+      { key: "processor", label: "프로세서" },
+      { key: "memory", label: "메모리" },
+      { key: "storage", label: "저장 용량" },
     ],
   },
   {
@@ -26,16 +36,6 @@ export const specificationSections = [
       { key: "displayResolution", label: "해상도" },
       { key: "refreshRate", label: "재생률" },
       { key: "displayFeatures", label: "주요 기능" },
-    ],
-  },
-  {
-    title: "성능",
-    description: "칩, 메모리, 연결 단자",
-    rows: [
-      { key: "processor", label: "프로세서" },
-      { key: "memory", label: "메모리" },
-      { key: "storage", label: "저장 용량" },
-      { key: "wiredConnection", label: "유선 연결" },
     ],
   },
   {
@@ -55,14 +55,15 @@ export const specificationSections = [
     rows: [
       { key: "batteryCapacity", label: "배터리 용량" },
       { key: "videoPlayback", label: "동영상 재생" },
-      { key: "fastCharging", label: "급속 충전" },
+      { key: "fastCharging", label: "유선 충전" },
       { key: "wirelessCharging", label: "무선 충전" },
     ],
   },
   {
     title: "연결과 내구성",
-    description: "네트워크, 생체 인증, 방수",
+    description: "단자, 네트워크, 생체 인증, 방수",
     rows: [
+      { key: "wiredConnection", label: "유선 연결" },
       { key: "wireless", label: "무선 연결" },
       { key: "biometrics", label: "생체 인증" },
       { key: "waterResistance", label: "방수·방진" },

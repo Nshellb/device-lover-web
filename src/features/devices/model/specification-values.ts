@@ -1,5 +1,15 @@
 import type { Device, SpecValue } from "./device";
 
+// The stylus row is hidden when none of the devices on screen support a pen.
+export function isSpecificationRowVisible(
+  devices: readonly Device[],
+  key: string,
+): boolean {
+  if (key !== "stylus") return true;
+
+  return devices.some((device) => device.specs.stylus?.value !== "미지원");
+}
+
 export function getSpecificationValue(
   device: Device,
   key: string,
@@ -16,7 +26,7 @@ export function getSpecificationValue(
     };
   }
 
-  const value = device.specs[key] ?? { value: "정보 없음", muted: true };
+  const value = device.specs[key] ?? { value: "정보 없음" };
 
   if (!isBasicInformation || device.category !== "smartphone") return value;
 
@@ -26,34 +36,18 @@ export function getSpecificationValue(
       detail: `내장메모리 ${device.specs.storage.value}${
         value.detail ? `, RAM ${value.detail}` : ""
       }`,
-      muted: value.muted,
     };
   }
 
   if (key === "displaySize") {
-    const inches = value.detail?.match(/(\d+(?:\.\d+)?)형/)?.[1];
-    const metricSize = value.value.match(/^(\d+(?:\.\d+)?)\s*(mm|cm)$/);
-    const millimetres = metricSize
-      ? `${
-          metricSize[2] === "cm"
-            ? Number(metricSize[1]) * 10
-            : metricSize[1]
-        }mm`
-      : value.value;
     const resolution = device.specs.displayResolution.value;
-    const pixels = resolution.match(/(\d+)\s*×\s*(\d+)/);
-    const aspectRatio = pixels
-      ? Math.round((Number(pixels[1]) / Number(pixels[2])) * 18) / 2
-      : null;
     const stylus = device.specs.stylus.value;
 
     return {
-      value: inches
-        ? `${value.detail?.startsWith("약") ? "약 " : ""}${inches}인치 (${millimetres})`
-        : value.value,
+      value: value.value,
       detail: [
-        aspectRatio ? `약 ${aspectRatio}:9 비율` : null,
-        `${resolution} 픽셀`,
+        value.detail,
+        resolution === "미확인" ? null : `${resolution} 픽셀`,
         stylus === "미지원" ? null : `펜 지원 (${stylus})`,
       ]
         .filter(Boolean)

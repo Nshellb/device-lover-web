@@ -1,13 +1,9 @@
 // Mirrors the JSON contract served by device-lover-api (src/dto/catalog.rs).
 // Field names are camelCase to match the API's #[serde(rename_all = "camelCase")] output.
 
-export type ApiSpecStatus = "known" | "unknown" | "not_disclosed" | "not_applicable";
-
 export type ApiSpecValue = {
-  status: ApiSpecStatus;
   value: string;
   detail: string | null;
-  muted: boolean;
   sourceId: string | null;
 };
 
@@ -55,7 +51,6 @@ export type ApiDeviceConfiguration = {
   label: string;
   storageGb: number;
   ramGb: number | null;
-  ramStatus: string;
 };
 
 export type ApiDeviceColor = {

@@ -40,12 +40,11 @@ export function brandVisual(brandSlug: string): Device["visual"] {
 }
 
 function toSpecValue(spec: ApiSpecValue | undefined): SpecValue {
-  if (!spec) return { value: "정보 없음", muted: true };
+  if (!spec) return { value: "정보 없음" };
 
   return {
     value: spec.value,
     detail: spec.detail ?? undefined,
-    muted: spec.muted,
   };
 }
 
@@ -78,7 +77,6 @@ export function toCamera(camera: ApiCamera): Device {
       },
       videoSpec: {
         value: camera.videoSpec,
-        muted: camera.videoSpec === "미지원",
       },
       bodyWeight: {
         value: `${camera.bodyWeightG} g`,

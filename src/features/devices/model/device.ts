@@ -1,7 +1,6 @@
 export type SpecValue = {
   value: string;
   detail?: string;
-  muted?: boolean;
 };
 
 export type DeviceCategory = "smartphone" | "camera";
