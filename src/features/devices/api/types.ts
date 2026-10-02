@@ -1,6 +1,14 @@
 // Mirrors the JSON contract served by device-lover-api (src/dto/catalog.rs).
 // Field names are camelCase to match the API's #[serde(rename_all = "camelCase")] output.
 
+export type ApiDimension = {
+  label: string;
+  widthMm: number;
+  heightMm: number;
+  depthMm: number;
+  note: string | null;
+};
+
 export type ApiSpecValue = {
   value: string;
   detail: string | null;
@@ -72,6 +80,7 @@ export type ApiDeviceSource = {
 export type ApiDeviceDetail = ApiDeviceSummary & {
   variant: string | null;
   configurations: ApiDeviceConfiguration[];
+  dimensions: ApiDimension[];
   colors: ApiDeviceColor[];
   sourceUrl: string;
   sources: ApiDeviceSource[];

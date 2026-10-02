@@ -1,7 +1,7 @@
 import type { Device, SpecValue } from "../model/device";
 import {
   cameraSpecificationSections,
-  specificationSections,
+  getSpecificationSections,
 } from "../model/specification-sections";
 import {
   getSpecificationValue,
@@ -22,14 +22,36 @@ function SpecCell({
         align === "right" ? "text-right" : "text-left"
       }`}
     >
-      <p className="font-medium text-zinc-900 dark:text-zinc-100">
-        {value.value}
-      </p>
-      {value.detail ? (
-        <p className="mt-1 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
-          {value.detail}
-        </p>
-      ) : null}
+      {value.blocks ? (
+        <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          {value.blocks.map((block) => (
+            <div key={block.label} className="py-2 first:pt-0 last:pb-0">
+              <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500">
+                {block.label}
+              </p>
+              <p className="font-medium text-zinc-900 dark:text-zinc-100">
+                {block.value}
+              </p>
+              {block.detail ? (
+                <p className="mt-1 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
+                  {block.detail}
+                </p>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <>
+          <p className="font-medium text-zinc-900 dark:text-zinc-100">
+            {value.value}
+          </p>
+          {value.detail ? (
+            <p className="mt-1 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
+              {value.detail}
+            </p>
+          ) : null}
+        </>
+      )}
     </td>
   );
 }
@@ -65,7 +87,7 @@ export function SingleDeviceTable({ device }: { device: Device }) {
   const sections =
     device.category === "camera"
       ? cameraSpecificationSections
-      : specificationSections;
+      : getSpecificationSections([device]);
 
   return (
     <table className="w-full min-w-[360px] table-fixed border-collapse text-left text-sm">
@@ -130,7 +152,7 @@ export function ComparisonTable({ devices }: { devices: ComparisonDevices }) {
   const sections =
     leftDevice.category === "camera"
       ? cameraSpecificationSections
-      : specificationSections;
+      : getSpecificationSections(devices);
 
   return (
     <table

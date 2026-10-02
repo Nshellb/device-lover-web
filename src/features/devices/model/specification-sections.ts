@@ -100,6 +100,65 @@ export const cameraSpecificationSections = [
   },
 ] as const;
 
+export type SpecificationSection = {
+  title: string;
+  description: string;
+  rows: readonly { key: string; label: string }[];
+};
+
+const SUB_DISPLAY_ROWS = [
+  { suffix: "DisplayPanel", label: "패널" },
+  { suffix: "DisplaySize", label: "화면 크기" },
+  { suffix: "DisplayResolution", label: "해상도" },
+  { suffix: "RefreshRate", label: "주사율" },
+  { suffix: "DisplayFeatures", label: "주요 기능" },
+] as const;
+
+export const SUB_DISPLAY_COUNT = 2;
+
+export function subDisplayKeys(sub: number): string[] {
+  return [
+    `sub${sub}DisplayName`,
+    ...SUB_DISPLAY_ROWS.map(({ suffix }) => `sub${sub}${suffix}`),
+  ];
+}
+
+// Sections for a smartphone table. Foldables with sub displays get one extra
+// section per sub display right after 디스플레이 (rendered only when at least
+// one compared device has it) and the main one is renamed 메인 디스플레이; with
+// only a main display it stays plain 디스플레이.
+export function getSpecificationSections(
+  devices: readonly { specs: Record<string, { value: string } | undefined> }[],
+): readonly SpecificationSection[] {
+  const subCount = [1, 2].filter((sub) =>
+    devices.some((device) => `sub${sub}DisplaySize` in device.specs),
+  ).length;
+  if (subCount === 0) return specificationSections;
+
+  return (
+    specificationSections as readonly SpecificationSection[]
+  ).flatMap<SpecificationSection>((section) =>
+    section.title === "디스플레이"
+      ? [
+          { ...section, title: "메인 디스플레이" },
+          ...Array.from({ length: subCount }, (_, index) => ({
+            title:
+              devices
+                .map(
+                  (device) => device.specs[`sub${index + 1}DisplayName`]?.value,
+                )
+                .find(Boolean) ?? `서브${index + 1} 디스플레이`,
+            description: "보조 화면",
+            rows: SUB_DISPLAY_ROWS.map(({ suffix, label }) => ({
+              key: `sub${index + 1}${suffix}`,
+              label,
+            })),
+          })),
+        ]
+      : [section],
+  );
+}
+
 export type SpecificationRowKey =
   (typeof specificationSections)[number]["rows"][number]["key"];
 export type CameraSpecificationRowKey =

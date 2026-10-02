@@ -26,7 +26,9 @@ export function getSpecificationValue(
     };
   }
 
-  const value = device.specs[key] ?? { value: "정보 없음" };
+  const value = device.specs[key] ?? {
+    value: key.startsWith("sub") ? "-" : "정보 없음",
+  };
 
   if (!isBasicInformation || device.category !== "smartphone") return value;
 
@@ -43,15 +45,50 @@ export function getSpecificationValue(
     const resolution = device.specs.displayResolution.value;
     const stylus = device.specs.stylus.value;
 
+    const mainDetail = [
+      value.detail,
+      resolution === "미확인" ? null : `${resolution} 픽셀`,
+      stylus === "미지원" ? null : `펜 지원 (${stylus})`,
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+    const subBlocks = [1, 2].flatMap((sub) => {
+      const size = device.specs[`sub${sub}DisplaySize`];
+      if (!size) return [];
+      const resolution = device.specs[`sub${sub}DisplayResolution`]?.value;
+
+      return [
+        {
+          label: device.specs[`sub${sub}DisplayName`]?.value ?? `서브${sub}`,
+          value: size.value,
+          detail:
+            [
+              size.detail,
+              resolution && resolution !== "미확인"
+                ? `${resolution} 픽셀`
+                : null,
+            ]
+              .filter(Boolean)
+              .join(", ") || undefined,
+        },
+      ];
+    });
+
     return {
       value: value.value,
-      detail: [
-        value.detail,
-        resolution === "미확인" ? null : `${resolution} 픽셀`,
-        stylus === "미지원" ? null : `펜 지원 (${stylus})`,
-      ]
-        .filter(Boolean)
-        .join(", "),
+      detail: mainDetail,
+      blocks:
+        subBlocks.length > 0
+          ? [
+              {
+                label: "메인",
+                value: value.value,
+                detail: mainDetail || undefined,
+              },
+              ...subBlocks,
+            ]
+          : undefined,
     };
   }
 

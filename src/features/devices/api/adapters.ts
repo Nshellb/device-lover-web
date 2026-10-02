@@ -1,12 +1,23 @@
-import type { Device, DeviceSearchItem, SpecKey, SpecValue } from "@/features/devices/model/device";
-import type { ApiCamera, ApiDeviceDetail, ApiDeviceSummary, ApiSpecValue } from "./types";
+import type {
+  Device,
+  DeviceSearchItem,
+  SpecKey,
+  SpecValue,
+} from "@/features/devices/model/device";
+import { subDisplayKeys } from "@/features/devices/model/specification-sections";
+import type {
+  ApiCamera,
+  ApiDeviceDetail,
+  ApiDeviceSummary,
+  ApiDimension,
+  ApiSpecValue,
+} from "./types";
 
 // Matches device-lover-api's src/catalog.rs SPEC_KEYS exactly — every
-// DeviceDetail response always carries all 26 of these keys. Colors are a
+// DeviceDetail response always carries all 25 of these keys. Colors are a
 // separate `colors` field on the response, not one of these generic specs.
 const SPEC_KEYS: SpecKey[] = [
   "operatingSystem",
-  "dimensions",
   "weight",
   "storage",
   "stylus",
@@ -86,10 +97,42 @@ export function toCamera(camera: ApiCamera): Device {
   };
 }
 
+// The API returns up to 3 structured dimension entries (e.g. 펼친 상태 / 접은 상태).
+// One entry reads as plain "a × b × c mm"; several are shown as labelled blocks.
+function toDimensionsSpec(dimensions: ApiDimension[]): SpecValue {
+  const format = (dimension: ApiDimension) =>
+    `${dimension.widthMm} × ${dimension.heightMm} × ${dimension.depthMm} mm`;
+  if (dimensions.length === 0) return { value: "정보 없음" };
+  if (dimensions.length === 1) {
+    return {
+      value: format(dimensions[0]),
+      detail: dimensions[0].note ?? undefined,
+    };
+  }
+
+  return {
+    value: format(dimensions[0]),
+    blocks: dimensions.map((dimension) => ({
+      label: dimension.label,
+      value: format(dimension),
+      detail: dimension.note ?? undefined,
+    })),
+  };
+}
+
 export function toDevice(detail: ApiDeviceDetail): Device {
-  const specs = Object.fromEntries(
-    SPEC_KEYS.map((key) => [key, toSpecValue(detail.specs[key])]),
-  ) as Record<SpecKey, SpecValue>;
+  const specs = Object.fromEntries([
+    ["dimensions", toDimensionsSpec(detail.dimensions)] as const,
+    ...SPEC_KEYS.map((key) => [key, toSpecValue(detail.specs[key])] as const),
+    // Sub displays exist only on foldables; include them only when present.
+    ...[1, 2]
+      .flatMap((sub) => subDisplayKeys(sub))
+      .flatMap((key) =>
+        detail.specs[key]
+          ? [[key, toSpecValue(detail.specs[key])] as const]
+          : [],
+      ),
+  ]) as Record<SpecKey, SpecValue>;
 
   return {
     category: "smartphone",
@@ -108,7 +151,9 @@ export function toDevice(detail: ApiDeviceDetail): Device {
   };
 }
 
-export function toDeviceSearchItem(summary: ApiDeviceSummary): DeviceSearchItem {
+export function toDeviceSearchItem(
+  summary: ApiDeviceSummary,
+): DeviceSearchItem {
   return {
     category: summary.category === "camera" ? "camera" : "smartphone",
     slug: summary.slug,

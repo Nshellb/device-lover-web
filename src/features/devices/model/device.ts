@@ -1,6 +1,15 @@
+export type SpecValueBlock = {
+  label: string;
+  value: string;
+  detail?: string;
+};
+
 export type SpecValue = {
   value: string;
   detail?: string;
+  // When set, the cell renders these blocks stacked top to bottom instead of
+  // value/detail (e.g. main + sub displays of a foldable).
+  blocks?: SpecValueBlock[];
 };
 
 export type DeviceCategory = "smartphone" | "camera";
