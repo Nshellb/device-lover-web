@@ -16,6 +16,7 @@ export const specificationSections = [
       { key: "stylus", label: "펜 지원" },
       { key: "operatingSystem", label: "운영체제" },
       { key: "releaseDate", label: "출시일" },
+      { key: "launchPrice", label: "출시가" },
     ],
   },
   {
@@ -35,6 +36,9 @@ export const specificationSections = [
       { key: "displaySize", label: "화면 크기" },
       { key: "displayResolution", label: "해상도" },
       { key: "refreshRate", label: "재생률" },
+      { key: "displayPeakBrightness", label: "피크 밝기" },
+      { key: "displayLamination", label: "라미네이팅" },
+      { key: "displayAntiReflective", label: "반사 방지" },
       { key: "displayFeatures", label: "주요 기능" },
     ],
   },
@@ -65,9 +69,15 @@ export const specificationSections = [
     rows: [
       { key: "wiredConnection", label: "유선 연결" },
       { key: "wireless", label: "무선 연결" },
+      { key: "sim", label: "SIM" },
       { key: "biometrics", label: "생체 인증" },
       { key: "waterResistance", label: "방수·방진" },
     ],
+  },
+  {
+    title: "기타",
+    description: "소재 등 추가 정보",
+    rows: [{ key: "materials", label: "소재" }],
   },
 ] as const;
 
@@ -111,6 +121,9 @@ const SUB_DISPLAY_ROWS = [
   { suffix: "DisplaySize", label: "화면 크기" },
   { suffix: "DisplayResolution", label: "해상도" },
   { suffix: "RefreshRate", label: "주사율" },
+  { suffix: "PeakBrightness", label: "피크 밝기" },
+  { suffix: "DisplayLamination", label: "라미네이팅" },
+  { suffix: "DisplayAntiReflective", label: "반사 방지" },
   { suffix: "DisplayFeatures", label: "주요 기능" },
 ] as const;
 

@@ -59,6 +59,23 @@ export type ApiDeviceConfiguration = {
   label: string;
   storageGb: number;
   ramGb: number | null;
+  priceKrw: number | null;
+  priceUsd: number | null;
+};
+
+export type ApiMaterial = {
+  part: string;
+  material: string;
+  note: string | null;
+};
+
+export type ApiPower = {
+  batteryMah: number | null;
+  batteryNote: string | null;
+  wiredW: number | null;
+  wiredNote: string | null;
+  wirelessW: number | null;
+  wirelessNote: string | null;
 };
 
 export type ApiDeviceColor = {
@@ -81,6 +98,8 @@ export type ApiDeviceDetail = ApiDeviceSummary & {
   variant: string | null;
   configurations: ApiDeviceConfiguration[];
   dimensions: ApiDimension[];
+  materials: ApiMaterial[];
+  power: ApiPower;
   colors: ApiDeviceColor[];
   sourceUrl: string;
   sources: ApiDeviceSource[];

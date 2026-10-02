@@ -9,7 +9,9 @@ import type {
   ApiCamera,
   ApiDeviceDetail,
   ApiDeviceSummary,
+  ApiDeviceConfiguration,
   ApiDimension,
+  ApiMaterial,
   ApiSpecValue,
 } from "./types";
 
@@ -25,6 +27,9 @@ const SPEC_KEYS: SpecKey[] = [
   "displaySize",
   "displayResolution",
   "refreshRate",
+  "displayPeakBrightness",
+  "displayLamination",
+  "displayAntiReflective",
   "displayFeatures",
   "processor",
   "memory",
@@ -35,13 +40,11 @@ const SPEC_KEYS: SpecKey[] = [
   "digitalZoom",
   "frontCamera",
   "videoRecording",
-  "batteryCapacity",
   "videoPlayback",
-  "fastCharging",
-  "wirelessCharging",
   "wireless",
   "biometrics",
   "waterResistance",
+  "sim",
 ];
 
 export function brandVisual(brandSlug: string): Device["visual"] {
@@ -120,9 +123,82 @@ function toDimensionsSpec(dimensions: ApiDimension[]): SpecValue {
   };
 }
 
+function chargeSpec(watts: number | null, note: string | null): SpecValue {
+  const value =
+    watts === null ? "미확인" : watts === 0 ? "미지원" : `${watts}W`;
+  return { value, detail: note ?? undefined };
+}
+
+function toMaterialsSpec(materials: ApiMaterial[]): SpecValue {
+  if (materials.length === 0) return { value: "미확인" };
+
+  return {
+    value: materials.map((item) => `${item.part} ${item.material}`).join(", "),
+    blocks: materials.map((item) => ({
+      label: item.part,
+      value: item.material,
+      detail: item.note ?? undefined,
+    })),
+  };
+}
+
+// Launch price per configuration (KRW, plus USD when known); one configuration
+// reads as a plain price.
+function toLaunchPriceSpec(
+  configurations: ApiDeviceConfiguration[],
+): SpecValue {
+  const format = (item: ApiDeviceConfiguration) => {
+    const parts = [
+      item.priceKrw !== null
+        ? `${item.priceKrw.toLocaleString("ko-KR")}원`
+        : null,
+      item.priceUsd !== null
+        ? `$${item.priceUsd.toLocaleString("en-US", { minimumFractionDigits: 2 })}`
+        : null,
+    ].filter(Boolean);
+    return parts.length > 0 ? parts.join(" / ") : "미확인";
+  };
+  if (
+    configurations.every(
+      (item) => item.priceKrw === null && item.priceUsd === null,
+    )
+  ) {
+    return { value: "미확인" };
+  }
+  if (configurations.length === 1) return { value: format(configurations[0]) };
+
+  return {
+    value: format(configurations[0]),
+    blocks: configurations.map((item) => ({
+      label: item.label,
+      value: format(item),
+    })),
+  };
+}
+
 export function toDevice(detail: ApiDeviceDetail): Device {
   const specs = Object.fromEntries([
     ["dimensions", toDimensionsSpec(detail.dimensions)] as const,
+    ["materials", toMaterialsSpec(detail.materials)] as const,
+    ["launchPrice", toLaunchPriceSpec(detail.configurations)] as const,
+    [
+      "batteryCapacity",
+      {
+        value:
+          detail.power.batteryMah === null
+            ? "미확인"
+            : `${detail.power.batteryMah.toLocaleString("ko-KR")}mAh`,
+        detail: detail.power.batteryNote ?? undefined,
+      },
+    ] as const,
+    [
+      "fastCharging",
+      chargeSpec(detail.power.wiredW, detail.power.wiredNote),
+    ] as const,
+    [
+      "wirelessCharging",
+      chargeSpec(detail.power.wirelessW, detail.power.wirelessNote),
+    ] as const,
     ...SPEC_KEYS.map((key) => [key, toSpecValue(detail.specs[key])] as const),
     // Sub displays exist only on foldables; include them only when present.
     ...[1, 2]

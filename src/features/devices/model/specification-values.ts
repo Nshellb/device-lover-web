@@ -6,9 +6,17 @@ export function isSpecificationRowVisible(
   devices: readonly Device[],
   key: string,
 ): boolean {
-  if (key !== "stylus") return true;
+  if (key === "stylus") {
+    return devices.some((device) => device.specs.stylus?.value !== "미지원");
+  }
 
-  return devices.some((device) => device.specs.stylus?.value !== "미지원");
+  // Lamination / anti-reflective rows (main and sub displays) only appear when
+  // at least one device on screen actually has the treatment.
+  if (/^(sub\d)?[dD]isplay(Lamination|AntiReflective)$/.test(key)) {
+    return devices.some((device) => device.specs[key]?.value === "있음");
+  }
+
+  return true;
 }
 
 export function getSpecificationValue(
