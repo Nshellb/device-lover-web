@@ -116,6 +116,14 @@ const SUB_DISPLAY_ROWS = [
 
 export const SUB_DISPLAY_COUNT = 2;
 
+// Names are stored without the trailing word ("커버"); shown as "<이름> 디스플레이".
+// A name that already ends with it is not doubled.
+export function subDisplayTitle(name: string | undefined, sub: number): string {
+  const base =
+    (name ?? "").replace(/\s*디스플레이$/, "").trim() || `서브${sub}`;
+  return `${base} 디스플레이`;
+}
+
 export function subDisplayKeys(sub: number): string[] {
   return [
     `sub${sub}DisplayName`,
@@ -142,12 +150,14 @@ export function getSpecificationSections(
       ? [
           { ...section, title: "메인 디스플레이" },
           ...Array.from({ length: subCount }, (_, index) => ({
-            title:
+            title: subDisplayTitle(
               devices
                 .map(
                   (device) => device.specs[`sub${index + 1}DisplayName`]?.value,
                 )
-                .find(Boolean) ?? `서브${index + 1} 디스플레이`,
+                .find(Boolean),
+              index + 1,
+            ),
             description: "보조 화면",
             rows: SUB_DISPLAY_ROWS.map(({ suffix, label }) => ({
               key: `sub${index + 1}${suffix}`,

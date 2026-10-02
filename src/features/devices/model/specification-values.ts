@@ -1,4 +1,5 @@
 import type { Device, SpecValue } from "./device";
+import { subDisplayTitle } from "./specification-sections";
 
 // The stylus row is hidden when none of the devices on screen support a pen.
 export function isSpecificationRowVisible(
@@ -60,7 +61,10 @@ export function getSpecificationValue(
 
       return [
         {
-          label: device.specs[`sub${sub}DisplayName`]?.value ?? `서브${sub}`,
+          label: subDisplayTitle(
+            device.specs[`sub${sub}DisplayName`]?.value,
+            sub,
+          ),
           value: size.value,
           detail:
             [
