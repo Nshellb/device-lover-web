@@ -16,6 +16,13 @@ export function isSpecificationRowVisible(
     return devices.some((device) => device.specs[key]?.value === "있음");
   }
 
+  // Gamut / contrast / supplier rows are shown once at least one device has a value.
+  if (/^(sub\d)?[dD]isplay(ColorGamut|ContrastRatio|Supplier)$/.test(key)) {
+    return devices.some(
+      (device) => device.specs[key] && device.specs[key].value !== "미확인",
+    );
+  }
+
   return true;
 }
 
@@ -40,6 +47,9 @@ export function getSpecificationValue(
   };
 
   if (!isBasicInformation || device.category !== "smartphone") return value;
+
+  // The 기본 정보 summary shows only the chip name; the detail stays in 성능.
+  if (key === "processor") return { value: value.value };
 
   if (key === "memory") {
     return {

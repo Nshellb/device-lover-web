@@ -42,6 +42,7 @@ export type Device = {
   variant: string;
   visual: "galaxy" | "iphone" | "camera" | "other";
   imageUrl: string | null;
+  imageAlt?: string | null;
   colors: readonly DeviceColor[];
   sourceUrl: string;
   specs: Record<string, SpecValue>;

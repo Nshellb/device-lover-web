@@ -11,9 +11,11 @@ import type { Device, DeviceColor } from "../model/device";
 function DeviceVisual({
   device,
   imageUrl,
+  alt,
 }: {
   device: Device;
   imageUrl: string | null;
+  alt: string;
 }) {
   if (!imageUrl) {
     if (device.category === "camera") {
@@ -23,7 +25,13 @@ function DeviceVisual({
           data-device-visual
           className="grid h-24 w-36 shrink-0 place-items-center rounded-lg border border-dashed border-zinc-300 bg-zinc-100 text-zinc-400 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-500"
         >
-          <svg viewBox="0 0 48 36" fill="none" stroke="currentColor" strokeWidth="2" className="h-10 w-14">
+          <svg
+            viewBox="0 0 48 36"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="h-10 w-14"
+          >
             <path d="M5 11h9l3-5h14l3 5h9a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V14a3 3 0 0 1 3-3Z" />
             <circle cx="24" cy="22" r="8" />
           </svg>
@@ -43,11 +51,11 @@ function DeviceVisual({
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={imageUrl}
-      alt=""
+      alt={alt}
       data-device-visual
       width={72}
       height={144}
-      className="h-36 w-[72px] shrink-0 object-contain"
+      className="h-36 w-[72px] shrink-0 rounded-xl border border-zinc-200 bg-white object-contain p-1 dark:border-zinc-700"
     />
   );
 }
@@ -73,7 +81,9 @@ function ColorPicker({
     >
       {colors.map((color) => {
         const isSelected = color.id === selectedId;
-        const label = color.exclusive ? `${color.name} (단독 색상)` : color.name;
+        const label = color.exclusive
+          ? `${color.name} (단독 색상)`
+          : color.name;
 
         if (color.colorCode) {
           return (
@@ -125,8 +135,7 @@ export function DeviceHeader({
   const placementClasses = {
     single:
       "flex-col items-start sm:flex-row sm:items-end sm:justify-start sm:gap-5",
-    left:
-      "flex-col items-end sm:flex-row sm:items-end sm:justify-end sm:gap-5",
+    left: "flex-col items-end sm:flex-row sm:items-end sm:justify-end sm:gap-5",
     right:
       "flex-col items-start sm:flex-row-reverse sm:items-end sm:justify-end sm:gap-5",
   }[placement];
@@ -135,21 +144,31 @@ export function DeviceHeader({
     device.visual === "camera"
       ? "text-amber-700 dark:text-amber-400"
       : device.visual === "galaxy"
-      ? "text-brand dark:text-blue-400"
-      : device.visual === "iphone"
-      ? "text-rose-700 dark:text-rose-400"
-      : "text-zinc-700 dark:text-zinc-300";
+        ? "text-brand dark:text-blue-400"
+        : device.visual === "iphone"
+          ? "text-rose-700 dark:text-rose-400"
+          : "text-zinc-700 dark:text-zinc-300";
   const modelNumbers = device.modelNumbers.map((value) => value.toUpperCase());
   const [selectedColorId, setSelectedColorId] = useState<string | null>(
     () => device.colors[0]?.id ?? null,
   );
-  const selectedColor = device.colors.find((color) => color.id === selectedColorId);
+  const selectedColor = device.colors.find(
+    (color) => color.id === selectedColorId,
+  );
   const activeImageUrl = selectedColor?.imageUrl ?? device.imageUrl;
   const pickerAlign = placement === "left" ? "right" : "left";
 
   return (
     <div data-device-header className={`flex gap-4 ${placementClasses}`}>
-      <DeviceVisual device={device} imageUrl={activeImageUrl} />
+      <DeviceVisual
+        device={device}
+        imageUrl={activeImageUrl}
+        alt={
+          selectedColor?.imageUrl
+            ? `${device.name} ${selectedColor.name}`
+            : (device.imageAlt ?? device.name)
+        }
+      />
       <div className={`pb-1 ${textAlignment}`}>
         <p
           className={`text-[11px] font-semibold tracking-[0.14em] ${brandColor}`}

@@ -10,6 +10,7 @@ import type {
   ApiDeviceDetail,
   ApiDeviceSummary,
   ApiDeviceConfiguration,
+  ApiDeviceSoftware,
   ApiDimension,
   ApiMaterial,
   ApiSpecValue,
@@ -19,7 +20,6 @@ import type {
 // DeviceDetail response always carries all 25 of these keys. Colors are a
 // separate `colors` field on the response, not one of these generic specs.
 const SPEC_KEYS: SpecKey[] = [
-  "operatingSystem",
   "weight",
   "storage",
   "stylus",
@@ -30,6 +30,9 @@ const SPEC_KEYS: SpecKey[] = [
   "displayPeakBrightness",
   "displayLamination",
   "displayAntiReflective",
+  "displayColorGamut",
+  "displayContrastRatio",
+  "displaySupplier",
   "displayFeatures",
   "processor",
   "memory",
@@ -123,6 +126,30 @@ function toDimensionsSpec(dimensions: ApiDimension[]): SpecValue {
   };
 }
 
+// Basic info shows just "출시 버전 ~ 최신 버전" (the launch version alone when there
+// are no upgrades); the 기타 section shows the full upgrade path with arrows.
+function toSoftwareSummary(items: ApiDeviceSoftware[]): SpecValue {
+  if (items.length === 0) return { value: "미확인" };
+  const launch = items.find((item) => item.isLaunch) ?? items[0];
+  const latest = items[items.length - 1];
+
+  return {
+    value:
+      latest === launch ? launch.label : `${launch.label} ~ ${latest.label}`,
+    detail: launch.note ?? undefined,
+  };
+}
+
+function toSoftwareDetail(items: ApiDeviceSoftware[]): SpecValue {
+  if (items.length === 0) return { value: "미확인" };
+  const launch = items.find((item) => item.isLaunch) ?? items[0];
+
+  return {
+    value: items.map((item) => item.label).join(" → "),
+    detail: launch.note ?? undefined,
+  };
+}
+
 function chargeSpec(watts: number | null, note: string | null): SpecValue {
   const value =
     watts === null ? "미확인" : watts === 0 ? "미지원" : `${watts}W`;
@@ -179,6 +206,22 @@ function toLaunchPriceSpec(
 export function toDevice(detail: ApiDeviceDetail): Device {
   const specs = Object.fromEntries([
     ["dimensions", toDimensionsSpec(detail.dimensions)] as const,
+    [
+      "operatingSystem",
+      toSoftwareSummary(detail.software.filter((i) => i.category === "os")),
+    ] as const,
+    [
+      "ux",
+      toSoftwareSummary(detail.software.filter((i) => i.category === "ux")),
+    ] as const,
+    [
+      "osDetail",
+      toSoftwareDetail(detail.software.filter((i) => i.category === "os")),
+    ] as const,
+    [
+      "uxDetail",
+      toSoftwareDetail(detail.software.filter((i) => i.category === "ux")),
+    ] as const,
     ["materials", toMaterialsSpec(detail.materials)] as const,
     ["launchPrice", toLaunchPriceSpec(detail.configurations)] as const,
     [
@@ -221,6 +264,7 @@ export function toDevice(detail: ApiDeviceDetail): Device {
     variant: detail.variant ?? "",
     visual: brandVisual(detail.brandSlug),
     imageUrl: detail.imageUrl,
+    imageAlt: detail.imageAlt,
     colors: detail.colors,
     sourceUrl: detail.sourceUrl,
     specs,

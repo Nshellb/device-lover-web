@@ -15,6 +15,7 @@ export const specificationSections = [
       { key: "speakers", label: "스피커" },
       { key: "stylus", label: "펜 지원" },
       { key: "operatingSystem", label: "운영체제" },
+      { key: "ux", label: "UX" },
       { key: "releaseDate", label: "출시일" },
       { key: "launchPrice", label: "출시가" },
     ],
@@ -39,6 +40,9 @@ export const specificationSections = [
       { key: "displayPeakBrightness", label: "피크 밝기" },
       { key: "displayLamination", label: "라미네이팅" },
       { key: "displayAntiReflective", label: "반사 방지" },
+      { key: "displayColorGamut", label: "색영역" },
+      { key: "displayContrastRatio", label: "명암비" },
+      { key: "displaySupplier", label: "공급사" },
       { key: "displayFeatures", label: "주요 기능" },
     ],
   },
@@ -76,8 +80,12 @@ export const specificationSections = [
   },
   {
     title: "기타",
-    description: "소재 등 추가 정보",
-    rows: [{ key: "materials", label: "소재" }],
+    description: "소재, 운영체제·UX 상세",
+    rows: [
+      { key: "materials", label: "소재" },
+      { key: "osDetail", label: "운영체제" },
+      { key: "uxDetail", label: "UX" },
+    ],
   },
 ] as const;
 
@@ -124,6 +132,9 @@ const SUB_DISPLAY_ROWS = [
   { suffix: "PeakBrightness", label: "피크 밝기" },
   { suffix: "DisplayLamination", label: "라미네이팅" },
   { suffix: "DisplayAntiReflective", label: "반사 방지" },
+  { suffix: "DisplayColorGamut", label: "색영역" },
+  { suffix: "DisplayContrastRatio", label: "명암비" },
+  { suffix: "DisplaySupplier", label: "공급사" },
   { suffix: "DisplayFeatures", label: "주요 기능" },
 ] as const;
 

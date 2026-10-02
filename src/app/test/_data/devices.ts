@@ -29,7 +29,10 @@ function createDevice(
 }
 
 const galaxyS24Specs: DeviceSpecs = {
-  operatingSystem: { value: "Android 14", detail: "One UI 6.1" },
+  operatingSystem: { value: "미확인" },
+  ux: { value: "미확인" },
+  osDetail: { value: "미확인" },
+  uxDetail: { value: "미확인" },
   dimensions: { value: "147.0 × 70.6 × 7.6 mm" },
   materials: { value: "미확인" },
   launchPrice: { value: "미확인" },
@@ -37,6 +40,9 @@ const galaxyS24Specs: DeviceSpecs = {
   sim: { value: "미확인" },
   displayLamination: { value: "미확인" },
   displayAntiReflective: { value: "미확인" },
+  displayColorGamut: { value: "미확인" },
+  displayContrastRatio: { value: "미확인" },
+  displaySupplier: { value: "미확인" },
   weight: { value: "167 g" },
   storage: { value: "256GB, 512GB" },
   stylus: { value: "미지원" },
@@ -68,7 +74,10 @@ const galaxyS24Specs: DeviceSpecs = {
 
 const galaxyS25Specs: DeviceSpecs = {
   ...galaxyS24Specs,
-  operatingSystem: { value: "Android 15", detail: "One UI 7" },
+  operatingSystem: { value: "미확인" },
+  ux: { value: "미확인" },
+  osDetail: { value: "미확인" },
+  uxDetail: { value: "미확인" },
   dimensions: { value: "146.9 × 70.5 × 7.2 mm" },
   materials: { value: "미확인" },
   launchPrice: { value: "미확인" },
@@ -76,6 +85,9 @@ const galaxyS25Specs: DeviceSpecs = {
   sim: { value: "미확인" },
   displayLamination: { value: "미확인" },
   displayAntiReflective: { value: "미확인" },
+  displayColorGamut: { value: "미확인" },
+  displayContrastRatio: { value: "미확인" },
+  displaySupplier: { value: "미확인" },
   weight: { value: "162 g" },
   processor: { value: "Snapdragon 8 Elite", detail: "for Galaxy" },
   memory: { value: "12GB" },
@@ -84,7 +96,10 @@ const galaxyS25Specs: DeviceSpecs = {
 
 const galaxyS26Specs: DeviceSpecs = {
   ...galaxyS25Specs,
-  operatingSystem: { value: "Android 16", detail: "One UI 8.5" },
+  operatingSystem: { value: "미확인" },
+  ux: { value: "미확인" },
+  osDetail: { value: "미확인" },
+  uxDetail: { value: "미확인" },
   dimensions: { value: "149.6 × 71.7 × 7.2 mm" },
   materials: { value: "미확인" },
   launchPrice: { value: "미확인" },
@@ -92,6 +107,9 @@ const galaxyS26Specs: DeviceSpecs = {
   sim: { value: "미확인" },
   displayLamination: { value: "미확인" },
   displayAntiReflective: { value: "미확인" },
+  displayColorGamut: { value: "미확인" },
+  displayContrastRatio: { value: "미확인" },
+  displaySupplier: { value: "미확인" },
   weight: { value: "167 g" },
   displaySize: { value: "159.3 mm", detail: "약 6.3형" },
   processor: { value: "Exynos 2600" },
@@ -101,7 +119,10 @@ const galaxyS26Specs: DeviceSpecs = {
 };
 
 const iphone16Specs: DeviceSpecs = {
-  operatingSystem: { value: "iOS 18" },
+  operatingSystem: { value: "미확인" },
+  ux: { value: "미확인" },
+  osDetail: { value: "미확인" },
+  uxDetail: { value: "미확인" },
   dimensions: { value: "147.6 × 71.6 × 7.80 mm" },
   materials: { value: "미확인" },
   launchPrice: { value: "미확인" },
@@ -109,6 +130,9 @@ const iphone16Specs: DeviceSpecs = {
   sim: { value: "미확인" },
   displayLamination: { value: "미확인" },
   displayAntiReflective: { value: "미확인" },
+  displayColorGamut: { value: "미확인" },
+  displayContrastRatio: { value: "미확인" },
+  displaySupplier: { value: "미확인" },
   weight: { value: "170 g" },
   storage: { value: "128GB, 256GB, 512GB" },
   stylus: { value: "미지원" },
@@ -137,7 +161,10 @@ const iphone16Specs: DeviceSpecs = {
 
 const iphone17Specs: DeviceSpecs = {
   ...iphone16Specs,
-  operatingSystem: { value: "iOS 26" },
+  operatingSystem: { value: "미확인" },
+  ux: { value: "미확인" },
+  osDetail: { value: "미확인" },
+  uxDetail: { value: "미확인" },
   dimensions: { value: "149.6 × 71.5 × 7.95 mm" },
   materials: { value: "미확인" },
   launchPrice: { value: "미확인" },
@@ -145,6 +172,9 @@ const iphone17Specs: DeviceSpecs = {
   sim: { value: "미확인" },
   displayLamination: { value: "미확인" },
   displayAntiReflective: { value: "미확인" },
+  displayColorGamut: { value: "미확인" },
+  displayContrastRatio: { value: "미확인" },
+  displaySupplier: { value: "미확인" },
   weight: { value: "177 g" },
   storage: { value: "256GB, 512GB" },
   displaySize: { value: "15.9 cm", detail: "약 6.3형" },
@@ -164,7 +194,10 @@ const iphone17Specs: DeviceSpecs = {
 
 const iphone18ProSpecs: DeviceSpecs = {
   ...iphone17Specs,
-  operatingSystem: { value: "iOS 27" },
+  operatingSystem: { value: "미확인" },
+  ux: { value: "미확인" },
+  osDetail: { value: "미확인" },
+  uxDetail: { value: "미확인" },
   dimensions: { value: "150.0 × 71.9 × 8.75 mm" },
   materials: { value: "미확인" },
   launchPrice: { value: "미확인" },
@@ -172,6 +205,9 @@ const iphone18ProSpecs: DeviceSpecs = {
   sim: { value: "미확인" },
   displayLamination: { value: "미확인" },
   displayAntiReflective: { value: "미확인" },
+  displayColorGamut: { value: "미확인" },
+  displayContrastRatio: { value: "미확인" },
+  displaySupplier: { value: "미확인" },
   weight: { value: "211 g" },
   storage: { value: "256GB, 512GB, 1TB, 2TB" },
   processor: { value: "A20 Pro", detail: "6코어 CPU, 7코어 GPU" },

@@ -27,6 +27,7 @@ export type ApiDeviceSummary = {
   aliases: string[];
   modelNumbers: string[];
   imageUrl: string | null;
+  imageAlt?: string | null;
 };
 
 export type ApiCamera = {
@@ -69,6 +70,15 @@ export type ApiMaterial = {
   note: string | null;
 };
 
+export type ApiDeviceSoftware = {
+  versionId: string;
+  category: "os" | "ux";
+  value: string;
+  label: string;
+  isLaunch: boolean;
+  note: string | null;
+};
+
 export type ApiPower = {
   batteryMah: number | null;
   batteryNote: string | null;
@@ -99,6 +109,7 @@ export type ApiDeviceDetail = ApiDeviceSummary & {
   configurations: ApiDeviceConfiguration[];
   dimensions: ApiDimension[];
   materials: ApiMaterial[];
+  software: ApiDeviceSoftware[];
   power: ApiPower;
   colors: ApiDeviceColor[];
   sourceUrl: string;
