@@ -17,7 +17,11 @@ function DeviceVisual({
   imageUrl: string | null;
   alt: string;
 }) {
-  if (!imageUrl) {
+  // Keyed by URL rather than a boolean so picking another color (a different
+  // imageUrl) gets a fresh attempt instead of inheriting the earlier failure.
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+
+  if (!imageUrl || failedUrl === imageUrl) {
     if (device.category === "camera") {
       return (
         <div
@@ -56,6 +60,7 @@ function DeviceVisual({
       width={96}
       height={144}
       className="h-36 w-24 shrink-0 rounded-xl border border-zinc-200 bg-white object-contain p-1 dark:border-zinc-700"
+      onError={() => setFailedUrl(imageUrl)}
     />
   );
 }
