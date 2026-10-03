@@ -7,7 +7,9 @@ import type { DeviceSearchItem } from "./device";
  * parts, or an empty part); otherwise it's 1-3 raw identifiers (slug, name,
  * alias, or model number) that still need server-side resolution.
  */
-export function parseIdentifiersFromPathname(pathname: string): string[] | null {
+export function parseIdentifiersFromPathname(
+  pathname: string,
+): string[] | null {
   if (pathname === "/" || pathname === "/test/ui/glass") {
     return null;
   }

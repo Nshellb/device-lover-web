@@ -8,8 +8,7 @@ import type { DeviceSearchItem } from "./device";
 const SEARCH_DEBOUNCE_MS = 250;
 
 type SearchResult =
-  | { status: "error" }
-  | { status: "ready"; results: DeviceSearchItem[] };
+  { status: "error" } | { status: "ready"; results: DeviceSearchItem[] };
 
 export function useDeviceSearch(query: string, isOpen: boolean) {
   // Keep the last result while a new query loads, including across modal opens.
@@ -28,7 +27,8 @@ export function useDeviceSearch(query: string, isOpen: boolean) {
           setSearchState({ query, result: { status: "ready", results } });
         })
         .catch((error: unknown) => {
-          if (error instanceof DOMException && error.name === "AbortError") return;
+          if (error instanceof DOMException && error.name === "AbortError")
+            return;
           setSearchState({ query, result: { status: "error" } });
         });
     }, SEARCH_DEBOUNCE_MS);

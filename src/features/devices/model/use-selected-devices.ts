@@ -27,7 +27,8 @@ export function useSelectedDevices(
     resolveSelectedDevices(currentIdentifiers, controller.signal)
       .then((devices) => setResolved({ key: identifiersKey, devices }))
       .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
+        if (error instanceof DOMException && error.name === "AbortError")
+          return;
         setResolved({ key: identifiersKey, devices: [] });
       });
 
