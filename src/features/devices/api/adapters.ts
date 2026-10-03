@@ -205,7 +205,8 @@ function toLaunchPriceSpec(
 
 export function toDevice(detail: ApiDeviceDetail): Device {
   const specs = Object.fromEntries([
-    ["dimensions", toDimensionsSpec(detail.dimensions)] as const,
+    // `?? []`: a cached or older API response can predate the dimensions field.
+    ["dimensions", toDimensionsSpec(detail.dimensions ?? [])] as const,
     [
       "operatingSystem",
       toSoftwareSummary(detail.software.filter((i) => i.category === "os")),
