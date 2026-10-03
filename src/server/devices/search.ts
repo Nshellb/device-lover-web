@@ -46,9 +46,16 @@ export async function searchDevices(searchParams: URLSearchParams): Promise<ApiD
     modelNumbers: [] as string[],
     imageUrl: null,
   }));
-  const items = [...smartphones.items, ...cameraItems]
-    .sort((left, right) => right.releaseDate.localeCompare(left.releaseDate))
-    .slice(0, requestedPageSize);
+  // With a query the API already ranks each list by relevance (name matches first),
+  // and the two lists can't be merged by relevance here, so keep that order instead
+  // of re-sorting by release date: smartphones first, then cameras.
+  const byRelevance = Boolean(query) && sort !== "release_date_desc";
+  const merged = [...smartphones.items, ...cameraItems];
+  const items = (
+    byRelevance
+      ? merged
+      : merged.sort((left, right) => right.releaseDate.localeCompare(left.releaseDate))
+  ).slice(0, requestedPageSize);
   const total = smartphones.pagination.total + cameras.pagination.total;
 
   return {
