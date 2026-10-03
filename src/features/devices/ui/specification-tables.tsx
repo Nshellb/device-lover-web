@@ -100,11 +100,11 @@ export function SingleDeviceTable({ device }: { device: Device }) {
         <tr>
           <th
             scope="col"
-            className="border-r border-zinc-200 bg-zinc-50 px-5 py-6 align-bottom text-xs font-semibold tracking-[0.14em] text-zinc-500 sm:px-7 dark:border-zinc-800 dark:bg-zinc-800/40 dark:text-zinc-400"
+            className="border-r border-zinc-200 bg-zinc-50 px-5 py-3 align-bottom text-xs font-semibold tracking-[0.14em] text-zinc-500 sm:px-7 dark:border-zinc-800 dark:bg-zinc-800/40 dark:text-zinc-400"
           >
             SPEC
           </th>
-          <th scope="col" className="px-5 py-7 align-bottom sm:px-7">
+          <th scope="col" className="px-5 py-3 align-bottom sm:px-7">
             <DeviceHeader device={device} placement="single" />
           </th>
         </tr>
@@ -171,12 +171,12 @@ export function ComparisonTable({ devices }: { devices: ComparisonDevices }) {
       </colgroup>
       <thead>
         <tr>
-          <th scope="col" className="px-5 py-7 align-bottom sm:px-7">
+          <th scope="col" className="px-5 py-3 align-bottom sm:px-7">
             <DeviceHeader device={leftDevice} placement="left" />
           </th>
           <th
             scope="col"
-            className="border-x border-zinc-200 bg-zinc-50 px-4 py-6 text-center align-bottom text-xs font-semibold tracking-[0.14em] text-zinc-500 dark:border-zinc-800 dark:bg-zinc-800/40 dark:text-zinc-400"
+            className="border-x border-zinc-200 bg-zinc-50 px-4 py-3 text-center align-bottom text-xs font-semibold tracking-[0.14em] text-zinc-500 dark:border-zinc-800 dark:bg-zinc-800/40 dark:text-zinc-400"
           >
             SPEC
           </th>
@@ -184,7 +184,7 @@ export function ComparisonTable({ devices }: { devices: ComparisonDevices }) {
             <th
               key={device.slug}
               scope="col"
-              className="px-5 py-7 align-bottom sm:px-7"
+              className="px-5 py-3 align-bottom sm:px-7"
             >
               <DeviceHeader device={device} placement="right" />
             </th>

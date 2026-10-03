@@ -42,7 +42,7 @@ function DeviceVisual({
       <div
         aria-hidden="true"
         data-device-visual
-        className="h-36 w-[72px] shrink-0 rounded-md border border-dashed border-zinc-300 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800/60"
+        className="h-36 w-24 shrink-0 rounded-md border border-dashed border-zinc-300 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800/60"
       />
     );
   }
@@ -53,9 +53,9 @@ function DeviceVisual({
       src={imageUrl}
       alt={alt}
       data-device-visual
-      width={72}
+      width={96}
       height={144}
-      className="h-36 w-[72px] shrink-0 rounded-xl border border-zinc-200 bg-white object-contain p-1 dark:border-zinc-700"
+      className="h-36 w-24 shrink-0 rounded-xl border border-zinc-200 bg-white object-contain p-1 dark:border-zinc-700"
     />
   );
 }
