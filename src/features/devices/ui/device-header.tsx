@@ -154,10 +154,13 @@ export function DeviceHeader({
           ? "text-rose-700 dark:text-rose-400"
           : "text-zinc-700 dark:text-zinc-300";
   const modelNumbers = device.modelNumbers.map((value) => value.toUpperCase());
+  // A color only changes the picture when it has its own image, so colors without
+  // one aren't offered (and the picker disappears when none has an image).
+  const imageColors = device.colors.filter((color) => color.imageUrl);
   const [selectedColorId, setSelectedColorId] = useState<string | null>(
-    () => device.colors[0]?.id ?? null,
+    () => imageColors[0]?.id ?? null,
   );
-  const selectedColor = device.colors.find(
+  const selectedColor = imageColors.find(
     (color) => color.id === selectedColorId,
   );
   const activeImageUrl = selectedColor?.imageUrl ?? device.imageUrl;
@@ -192,7 +195,7 @@ export function DeviceHeader({
           {device.variant}
         </p>
         <ColorPicker
-          colors={device.colors}
+          colors={imageColors}
           selectedId={selectedColorId}
           onSelect={setSelectedColorId}
           align={pickerAlign}
