@@ -38,6 +38,25 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+/* Mobile (< sm) steps every text size down about one notch. Only the type
+   scale is overridden, not the root font size, so rem-based spacing stays put.
+   Unlayered, so it wins over Tailwind's theme layer; line heights are ratios. */
+@media (width < 40rem) {
+  :root {
+    --text-xs: 0.6875rem;
+    --text-sm: 0.8125rem;
+    --text-base: 0.9375rem;
+    --text-lg: 1rem;
+    --text-xl: 1.125rem;
+    --text-2xl: 1.3125rem;
+    --text-3xl: 1.625rem;
+  }
+
+  body {
+    font-size: 0.9375rem;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html.theme-animating,
   html.theme-animating *,
