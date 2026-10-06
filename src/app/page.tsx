@@ -12,18 +12,16 @@ async function getLatestDevices() {
 export async function generateMetadata(): Promise<Metadata> {
   const devices = await getLatestDevices();
 
-  if (devices.length === 0) {
-    return {
-      title: "Device Lover",
-      description: "스마트폰과 카메라 등 전자기기의 사양을 한눈에 비교하세요.",
-    };
-  }
+  if (devices.length === 0) return {};
 
   const deviceNames = devices.map((device) => device.name).join(" vs ");
+  const title = `${deviceNames} 스펙 비교`;
+  const description = `${deviceNames}, 가장 최근에 출시된 스마트폰의 주요 사양과 차이점을 한눈에 비교합니다.`;
 
   return {
-    title: `${deviceNames} 비교`,
-    description: `${deviceNames}, 가장 최근에 출시된 스마트폰의 주요 사양을 비교합니다.`,
+    title: { absolute: `${title} | Device Lover` },
+    description,
+    openGraph: { title, description },
   };
 }
 

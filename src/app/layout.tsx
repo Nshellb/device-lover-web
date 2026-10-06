@@ -5,6 +5,8 @@ import { SiteFooter } from "./_components/site-footer";
 import { SiteHeader } from "./_components/site-header";
 import { ScrollAwareHeader } from "./_components/scroll-aware-header";
 
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/shared/seo/site";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,15 +32,21 @@ const themeInitializationScript = `
 `;
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Device Lover",
-    template: "%s | Device Lover",
+    default: `${SITE_NAME} - 전자기기 사양 비교`,
+    template: `%s | ${SITE_NAME}`,
   },
-  description: "스마트폰과 카메라 등 전자기기의 사양을 한눈에 비교하세요.",
-  icons: {
-    icon: "/device-lover-logo.svg",
-    shortcut: "/device-lover-logo.svg",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "ko_KR",
+    title: `${SITE_NAME} - 전자기기 사양 비교`,
+    description: SITE_DESCRIPTION,
   },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
