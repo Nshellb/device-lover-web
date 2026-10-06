@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import type { ReactNode } from "react";
 
 import type { Device, SpecValue } from "../model/device";
 import {
@@ -10,20 +10,17 @@ import {
   isSpecificationRowVisible,
 } from "../model/specification-values";
 import { DeviceHeader } from "./device-header";
-import {
-  deviceSizeShapes,
-  hasSizeDrawing,
-  SizeFigure,
-  sizeViews,
-} from "./size-comparison";
-import { ComparisonSizeOverlay } from "./size-comparison-overlay";
+import { SizeThumbnailButton } from "./size-comparison-modal";
 
 function SpecCell({
   value,
   align = "left",
+  children,
 }: {
   value: SpecValue;
   align?: "left" | "right";
+  // Extra content under the value, e.g. the 크기 thumbnail.
+  children?: ReactNode;
 }) {
   return (
     <td
@@ -61,6 +58,7 @@ function SpecCell({
           ) : null}
         </>
       )}
+      {children}
     </td>
   );
 }
@@ -95,58 +93,11 @@ function SectionHeader({
 const rowClass =
   "border-b border-zinc-100 last:border-b-0 hover:bg-zinc-50/80 dark:border-zinc-800/80 dark:hover:bg-zinc-800/30";
 
-// 크기 section right after 기본 정보: front / side / top outlines drawn from the
-// numeric dimensions at one shared scale; a comparison overlays every device.
-// From sm up the views sit in one row across the table and scroll sideways with
-// it like the other sections. On mobile they stack, and the box is pinned to
-// the scroll frame (`@container` on it) via sticky + 100cqw so the stack stays
-// on screen while the table scrolls.
-function SizeSection({
-  devices,
-  layout,
-}: {
-  devices: readonly Device[];
-  layout: "single" | "comparison";
-}) {
-  const columnCount = (devices.length + 1) as 2 | 3 | 4;
-
-  return (
-    <tbody>
-      <SectionHeader
-        title="크기"
-        description="같은 비율로 그린 정면·측면·상단 크기"
-        columnCount={columnCount}
-      />
-      <tr className={rowClass}>
-        <td colSpan={columnCount} className="p-0">
-          <div className="sticky left-0 w-[100cqw] px-5 py-6 sm:static sm:w-auto sm:px-7">
-            {layout === "single" ? (
-              <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:justify-center sm:gap-12">
-                {sizeViews.map((view) => (
-                  <SizeFigure
-                    key={view.key}
-                    shapes={deviceSizeShapes(devices[0])}
-                    view={view}
-                    title
-                  />
-                ))}
-              </div>
-            ) : (
-              <ComparisonSizeOverlay devices={devices} />
-            )}
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  );
-}
-
 export function SingleDeviceTable({ device }: { device: Device }) {
   const sections =
     device.category === "camera"
       ? cameraSpecificationSections
       : getSpecificationSections([device]);
-  const showSize = device.category !== "camera" && hasSizeDrawing([device]);
 
   return (
     <table className="w-full min-w-[360px] table-fixed border-collapse text-left text-sm">
@@ -169,37 +120,36 @@ export function SingleDeviceTable({ device }: { device: Device }) {
         </tr>
       </thead>
       {sections.map((section) => (
-        <Fragment key={section.title}>
-          <tbody>
-            <SectionHeader
-              title={section.title}
-              description={section.description}
-              columnCount={2}
-            />
-            {section.rows
-              .filter((row) => isSpecificationRowVisible([device], row.key))
-              .map((row) => (
-                <tr key={row.key} className={rowClass}>
-                  <th
-                    scope="row"
-                    className="border-r border-zinc-200 bg-zinc-50 px-5 py-4 align-middle font-medium text-zinc-600 sm:px-7 dark:border-zinc-800 dark:bg-zinc-800/40 dark:text-zinc-300"
-                  >
-                    {row.label}
-                  </th>
-                  <SpecCell
-                    value={getSpecificationValue(
-                      device,
-                      row.key,
-                      section.title === "기본 정보",
-                    )}
-                  />
-                </tr>
-              ))}
-          </tbody>
-          {showSize && section.title === "기본 정보" ? (
-            <SizeSection devices={[device]} layout="single" />
-          ) : null}
-        </Fragment>
+        <tbody key={section.title}>
+          <SectionHeader
+            title={section.title}
+            description={section.description}
+            columnCount={2}
+          />
+          {section.rows
+            .filter((row) => isSpecificationRowVisible([device], row.key))
+            .map((row) => (
+              <tr key={row.key} className={rowClass}>
+                <th
+                  scope="row"
+                  className="border-r border-zinc-200 bg-zinc-50 px-5 py-4 align-middle font-medium text-zinc-600 sm:px-7 dark:border-zinc-800 dark:bg-zinc-800/40 dark:text-zinc-300"
+                >
+                  {row.label}
+                </th>
+                <SpecCell
+                  value={getSpecificationValue(
+                    device,
+                    row.key,
+                    section.title === "기본 정보",
+                  )}
+                >
+                  {row.key === "dimensions" ? (
+                    <SizeThumbnailButton devices={[device]} index={0} />
+                  ) : null}
+                </SpecCell>
+              </tr>
+            ))}
+        </tbody>
       ))}
     </table>
   );
@@ -214,7 +164,6 @@ export function ComparisonTable({ devices }: { devices: ComparisonDevices }) {
     leftDevice.category === "camera"
       ? cameraSpecificationSections
       : getSpecificationSections(devices);
-  const showSize = leftDevice.category !== "camera" && hasSizeDrawing(devices);
 
   return (
     <table
@@ -254,48 +203,58 @@ export function ComparisonTable({ devices }: { devices: ComparisonDevices }) {
         </tr>
       </thead>
       {sections.map((section) => (
-        <Fragment key={section.title}>
-          <tbody>
-            <SectionHeader
-              title={section.title}
-              description={section.description}
-              columnCount={columnCount}
-            />
-            {section.rows
-              .filter((row) => isSpecificationRowVisible(devices, row.key))
-              .map((row) => (
-                <tr key={row.key} className={rowClass}>
+        <tbody key={section.title}>
+          <SectionHeader
+            title={section.title}
+            description={section.description}
+            columnCount={columnCount}
+          />
+          {section.rows
+            .filter((row) => isSpecificationRowVisible(devices, row.key))
+            .map((row) => (
+              <tr key={row.key} className={rowClass}>
+                <SpecCell
+                  value={getSpecificationValue(
+                    leftDevice,
+                    row.key,
+                    section.title === "기본 정보",
+                  )}
+                  align="right"
+                >
+                  {row.key === "dimensions" ? (
+                    <SizeThumbnailButton
+                      devices={devices}
+                      index={0}
+                      align="right"
+                    />
+                  ) : null}
+                </SpecCell>
+                <th
+                  scope="row"
+                  className="border-x border-zinc-200 bg-zinc-50 px-2 py-4 text-center align-middle font-medium text-zinc-600 dark:border-zinc-800 dark:bg-zinc-800/40 dark:text-zinc-300"
+                >
+                  {row.label}
+                </th>
+                {rightDevices.map((device, index) => (
                   <SpecCell
+                    key={device.slug}
                     value={getSpecificationValue(
-                      leftDevice,
+                      device,
                       row.key,
                       section.title === "기본 정보",
                     )}
-                    align="right"
-                  />
-                  <th
-                    scope="row"
-                    className="border-x border-zinc-200 bg-zinc-50 px-2 py-4 text-center align-middle font-medium text-zinc-600 dark:border-zinc-800 dark:bg-zinc-800/40 dark:text-zinc-300"
                   >
-                    {row.label}
-                  </th>
-                  {rightDevices.map((device) => (
-                    <SpecCell
-                      key={device.slug}
-                      value={getSpecificationValue(
-                        device,
-                        row.key,
-                        section.title === "기본 정보",
-                      )}
-                    />
-                  ))}
-                </tr>
-              ))}
-          </tbody>
-          {showSize && section.title === "기본 정보" ? (
-            <SizeSection devices={devices} layout="comparison" />
-          ) : null}
-        </Fragment>
+                    {row.key === "dimensions" ? (
+                      <SizeThumbnailButton
+                        devices={devices}
+                        index={index + 1}
+                      />
+                    ) : null}
+                  </SpecCell>
+                ))}
+              </tr>
+            ))}
+        </tbody>
       ))}
     </table>
   );

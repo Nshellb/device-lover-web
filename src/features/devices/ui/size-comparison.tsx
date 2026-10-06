@@ -77,10 +77,6 @@ const TONES = [
 
 export const sizeTone = (tone: number) => TONES[tone % TONES.length];
 
-export function hasSizeDrawing(devices: readonly Device[]): boolean {
-  return devices.some((device) => (device.dimensions?.length ?? 0) > 0);
-}
-
 // Single device: its entries in different tones, captioned by entry label.
 export function deviceSizeShapes(device: Device): SizeShape[] {
   const dimensions = device.dimensions ?? [];
