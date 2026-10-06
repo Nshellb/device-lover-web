@@ -63,7 +63,7 @@ export function ComparisonWorkspace({
         tabIndex={0}
         data-device-slugs={deviceSlugs}
         data-layout={effectiveLayout}
-        className="comparison-frame comparison-table-transition overflow-x-auto rounded-surface border border-zinc-200 bg-white outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 dark:border-zinc-800 dark:bg-zinc-900 dark:focus-visible:ring-offset-zinc-950"
+        className="comparison-frame comparison-table-transition @container overflow-x-auto rounded-surface border border-zinc-200 bg-white outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 dark:border-zinc-800 dark:bg-zinc-900 dark:focus-visible:ring-offset-zinc-950"
       >
         {children}
       </div>

@@ -105,7 +105,7 @@ export function toCamera(camera: ApiCamera): Device {
 
 // The API returns up to 3 structured dimension entries (e.g. 펼친 상태 / 접은 상태).
 // One entry reads as plain "a × b × c mm"; several are shown as labelled blocks.
-function toDimensionsSpec(dimensions: ApiDimension[]): SpecValue {
+function toDimensionsSpec(dimensions: readonly ApiDimension[]): SpecValue {
   const format = (dimension: ApiDimension) =>
     `${dimension.widthMm} × ${dimension.heightMm} × ${dimension.depthMm} mm`;
   if (dimensions.length === 0) return { value: "정보 없음" };
@@ -204,9 +204,10 @@ function toLaunchPriceSpec(
 }
 
 export function toDevice(detail: ApiDeviceDetail): Device {
+  // `?? []`: a cached or older API response can predate the dimensions field.
+  const dimensions = detail.dimensions ?? [];
   const specs = Object.fromEntries([
-    // `?? []`: a cached or older API response can predate the dimensions field.
-    ["dimensions", toDimensionsSpec(detail.dimensions ?? [])] as const,
+    ["dimensions", toDimensionsSpec(dimensions)] as const,
     [
       "operatingSystem",
       toSoftwareSummary(detail.software.filter((i) => i.category === "os")),
@@ -269,6 +270,12 @@ export function toDevice(detail: ApiDeviceDetail): Device {
     colors: detail.colors,
     sourceUrl: detail.sourceUrl,
     specs,
+    dimensions: dimensions.map(({ label, widthMm, heightMm, depthMm }) => ({
+      label,
+      widthMm,
+      heightMm,
+      depthMm,
+    })),
   };
 }
 

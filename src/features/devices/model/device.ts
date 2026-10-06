@@ -31,6 +31,13 @@ export type DeviceSearchItem = {
   aliases: readonly string[];
 };
 
+export type DeviceDimension = {
+  label: string;
+  widthMm: number;
+  heightMm: number;
+  depthMm: number;
+};
+
 export type Device = {
   category: DeviceCategory;
   slug: string;
@@ -46,6 +53,9 @@ export type Device = {
   colors: readonly DeviceColor[];
   sourceUrl: string;
   specs: Record<string, SpecValue>;
+  // Numeric size entries (e.g. 펼친 상태 / 접은 상태) for the 크기 drawings;
+  // the text form lives in specs.dimensions.
+  dimensions?: readonly DeviceDimension[];
 };
 
 export type {
