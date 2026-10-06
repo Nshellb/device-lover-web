@@ -76,7 +76,7 @@ export function SizeThumbnailButton({
             );
           })}
         </svg>
-        <span className="whitespace-nowrap underline-offset-2 hover:underline">
+        <span className="whitespace-nowrap">
           크기 비교
         </span>
       </button>
