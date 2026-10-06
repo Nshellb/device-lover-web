@@ -167,7 +167,7 @@ export function getSpecificationValue(
         subBlocks.length > 0
           ? [
               {
-                label: "메인",
+                label: "메인 디스플레이",
                 value: value.value,
                 detail: mainDetail || undefined,
               },
