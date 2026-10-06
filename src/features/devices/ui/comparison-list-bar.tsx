@@ -239,7 +239,8 @@ export function ComparisonListBar({
             className={`mx-auto w-full max-w-6xl px-4 pb-3 transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none sm:px-6 ${isOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"}`}
           >
             <div data-comparison-panel className="rounded-sheet border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-800 dark:bg-zinc-900/70">
-              <div className="flex flex-wrap items-center gap-2">
+              {/* Mobile: label on its own line, then one device per row. */}
+              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
                 <p className="mr-1 text-xs font-bold text-zinc-500 dark:text-zinc-400">
                   선택한 기기
                 </p>
@@ -260,7 +261,7 @@ export function ComparisonListBar({
                     <span className="grid size-5 shrink-0 place-items-center rounded-full bg-brand text-[10px] font-bold text-white">
                       {index + 1}
                     </span>
-                    <span className="min-w-0 truncate text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                    <span className="min-w-0 flex-1 truncate text-xs font-semibold text-zinc-900 sm:flex-none dark:text-zinc-100">
                       {device.name}
                     </span>
                     <div className="flex shrink-0 items-center">
@@ -268,14 +269,14 @@ export function ComparisonListBar({
                         type="button"
                         disabled={index === 0}
                         onClick={() => moveDevice(index, -1)}
-                        aria-label={`${device.name} 왼쪽으로 이동`}
+                        aria-label={`${device.name} 앞으로 이동`}
                         className="grid size-7 place-items-center rounded-full text-zinc-500 enabled:hover:bg-zinc-100 disabled:opacity-30 dark:enabled:hover:bg-zinc-800"
                       >
                         <svg
                           aria-hidden="true"
                           viewBox="0 0 16 16"
                           fill="currentColor"
-                          className="size-3.5"
+                          className="size-3.5 rotate-90 sm:rotate-0"
                         >
                           <path d="M11.5 3.25 5 8l6.5 4.75V3.25Z" />
                         </svg>
@@ -284,14 +285,14 @@ export function ComparisonListBar({
                         type="button"
                         disabled={index === selectedDevices.length - 1}
                         onClick={() => moveDevice(index, 1)}
-                        aria-label={`${device.name} 오른쪽으로 이동`}
+                        aria-label={`${device.name} 뒤로 이동`}
                         className="grid size-7 place-items-center rounded-full text-zinc-500 enabled:hover:bg-zinc-100 disabled:opacity-30 dark:enabled:hover:bg-zinc-800"
                       >
                         <svg
                           aria-hidden="true"
                           viewBox="0 0 16 16"
                           fill="currentColor"
-                          className="size-3.5"
+                          className="size-3.5 rotate-90 sm:rotate-0"
                         >
                           <path d="M4.5 3.25 11 8l-6.5 4.75V3.25Z" />
                         </svg>
