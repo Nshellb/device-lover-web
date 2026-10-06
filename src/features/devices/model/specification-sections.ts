@@ -35,11 +35,14 @@ export const specificationSections = [
     rows: [
       { key: "displayPanel", label: "패널" },
       { key: "displaySize", label: "화면 크기" },
+      { key: "displayAspectRatio", label: "화면 비율" },
       { key: "displayResolution", label: "해상도" },
-      { key: "refreshRate", label: "재생률" },
+      { key: "displayPpi", label: "PPI" },
+      { key: "refreshRate", label: "주사율" },
       { key: "displayPeakBrightness", label: "피크 밝기" },
       { key: "displayLamination", label: "라미네이팅" },
       { key: "displayAntiReflective", label: "반사 방지" },
+      { key: "displayAlwaysOn", label: "Always On Display" },
       { key: "displayColorGamut", label: "색영역" },
       { key: "displayContrastRatio", label: "명암비" },
       { key: "displaySupplier", label: "공급사" },
@@ -127,11 +130,14 @@ export type SpecificationSection = {
 const SUB_DISPLAY_ROWS = [
   { suffix: "DisplayPanel", label: "패널" },
   { suffix: "DisplaySize", label: "화면 크기" },
+  { suffix: "DisplayAspectRatio", label: "화면 비율" },
   { suffix: "DisplayResolution", label: "해상도" },
+  { suffix: "DisplayPpi", label: "PPI" },
   { suffix: "RefreshRate", label: "주사율" },
   { suffix: "PeakBrightness", label: "피크 밝기" },
   { suffix: "DisplayLamination", label: "라미네이팅" },
   { suffix: "DisplayAntiReflective", label: "반사 방지" },
+  { suffix: "DisplayAlwaysOn", label: "Always On Display" },
   { suffix: "DisplayColorGamut", label: "색영역" },
   { suffix: "DisplayContrastRatio", label: "명암비" },
   { suffix: "DisplaySupplier", label: "공급사" },
@@ -197,4 +203,11 @@ export type SpecificationRowKey =
   (typeof specificationSections)[number]["rows"][number]["key"];
 export type CameraSpecificationRowKey =
   (typeof cameraSpecificationSections)[number]["rows"][number]["key"];
-export type SpecKey = Exclude<SpecificationRowKey, "releaseDate"> | "stylus";
+// displayAspectRatio / displayPpi are derived from the displaySize /
+// displayResolution details, not stored specs.
+export type SpecKey =
+  | Exclude<
+      SpecificationRowKey,
+      "releaseDate" | "displayAspectRatio" | "displayPpi"
+    >
+  | "stylus";

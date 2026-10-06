@@ -30,6 +30,7 @@ const SPEC_KEYS: SpecKey[] = [
   "displayPeakBrightness",
   "displayLamination",
   "displayAntiReflective",
+  "displayAlwaysOn",
   "displayColorGamut",
   "displayContrastRatio",
   "displaySupplier",

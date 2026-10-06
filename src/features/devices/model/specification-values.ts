@@ -2,6 +2,25 @@ import type { Device, SpecValue } from "./device";
 import { subDisplayTitle } from "./specification-sections";
 
 // The stylus row is hidden when none of the devices on screen support a pen.
+// displayResolution keeps the PPI inside its free-text detail ("460ppi",
+// "FHD+, 416ppi"). Splits it out so it can get its own row.
+// A leading "약" belongs to the PPI and goes with it.
+const PPI_PATTERN = /(?:약\s*)?(\d+(?:\.\d+)?)\s*ppi/i;
+
+export function splitResolutionDetail(detail: string | undefined): {
+  ppi?: string;
+  rest?: string;
+} {
+  if (!detail) return {};
+  const match = detail.match(PPI_PATTERN);
+  if (!match) return { rest: detail };
+  const rest = detail
+    .replace(match[0], "")
+    .replace(/^[\s,]+|[\s,]+$/g, "")
+    .replace(/,\s*,/g, ",");
+  return { ppi: `${match[1]}ppi`, rest: rest || undefined };
+}
+
 export function isSpecificationRowVisible(
   devices: readonly Device[],
   key: string,
@@ -16,8 +35,22 @@ export function isSpecificationRowVisible(
     return devices.some((device) => device.specs[key]?.value === "있음");
   }
 
-  // Gamut / contrast / supplier rows are shown once at least one device has a value.
-  if (/^(sub\d)?[dD]isplay(ColorGamut|ContrastRatio|Supplier)$/.test(key)) {
+  // PPI rows appear once at least one device has a PPI.
+  const ppiKey = key.match(/^(sub\d)?[dD]isplayPpi$/);
+  if (ppiKey) {
+    const resolutionKey = ppiKey[1]
+      ? `${ppiKey[1]}DisplayResolution`
+      : "displayResolution";
+    return devices.some(
+      (device) => splitResolutionDetail(device.specs[resolutionKey]?.detail).ppi,
+    );
+  }
+
+  // Gamut / contrast / supplier / Always On Display rows are shown once at
+  // least one device has a value.
+  if (
+    /^(sub\d)?[dD]isplay(ColorGamut|ContrastRatio|Supplier|AlwaysOn)$/.test(key)
+  ) {
     return devices.some(
       (device) => device.specs[key] && device.specs[key].value !== "미확인",
     );
@@ -40,6 +73,36 @@ export function getSpecificationValue(
           ? `${year}년 ${Number(month)}월`
           : `${year}년 ${Number(month)}월 ${Number(day)}일`,
     };
+  }
+
+  // displaySize stores the ratio in its detail ("19.5:9 비율"); the 디스플레이
+  // sections show it as its own 화면 비율 row, so 화면 크기 drops the detail.
+  const sizeKey = key.match(/^(sub\d)?[dD]isplay(Size|AspectRatio)$/);
+  if (sizeKey && !isBasicInformation) {
+    const size = device.specs[
+      sizeKey[1] ? `${sizeKey[1]}DisplaySize` : "displaySize"
+    ] ?? { value: sizeKey[1] ? "-" : "정보 없음" };
+    if (sizeKey[2] === "Size") return { value: size.value };
+    return {
+      value:
+        size.detail?.match(/\d+(?:\.\d+)?\s*:\s*\d+(?:\.\d+)?/)?.[0] ??
+        (sizeKey[1] ? "-" : "정보 없음"),
+    };
+  }
+
+  // Same for displayResolution: the PPI in its detail gets its own PPI row.
+  const resolutionKey = key.match(/^(sub\d)?[dD]isplay(Resolution|Ppi)$/);
+  if (resolutionKey && !isBasicInformation) {
+    const missing = resolutionKey[1] ? "-" : "정보 없음";
+    const resolution = device.specs[
+      resolutionKey[1] ? `${resolutionKey[1]}DisplayResolution` : "displayResolution"
+    ];
+    if (!resolution) return { value: missing };
+    const { ppi, rest } = splitResolutionDetail(resolution.detail);
+    if (resolutionKey[2] === "Resolution") {
+      return { value: resolution.value, detail: rest };
+    }
+    return { value: ppi ?? "미확인" };
   }
 
   const value = device.specs[key] ?? {
