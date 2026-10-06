@@ -3,7 +3,7 @@ export const specificationSections = [
     title: "기본 정보",
     description: "핵심 하드웨어와 기본 사양",
     rows: [
-      { key: "processor", label: "프로세서 (AP)" },
+      { key: "processor", label: "프로세서" },
       { key: "memory", label: "메모리" },
       { key: "displaySize", label: "디스플레이" },
       { key: "dimensions", label: "크기" },
